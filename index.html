@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dual Time Counter</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: 'TempleOS', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      user-select: none;
+    }
+
+    h1 {
+      font-size: 200px;
+      margin: 10px 0;
+      cursor: pointer;
+      transition: transform 0.1s ease, color 0.3s ease;
+    }
+
+    h1:active {
+      transform: scale(1.1);
+      color: #9e5200;
+    }
+
+    p {
+      font-size: 20px;
+      margin: 0;
+      opacity: 0.7;
+    }
+
+    #reset {
+      margin-top: 40px;
+      font-size: 24px;
+      padding: 10px 30px;
+      background-color: #9e5200;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+    }
+
+    #reset:hover {
+      background-color: #633402;
+    }
+
+    #reset:active {
+      transform: scale(0.95);
+    }
+
+    .minute-buttons {
+      margin-top: 20px;
+    }
+
+    .minute-buttons button {
+      background-color: #222;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 20px;
+      padding: 8px 20px;
+      margin: 0 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+    }
+
+    .minute-buttons button:hover {
+      background-color: #444;
+    }
+
+    .minute-buttons button:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body>
+  <!-- Hour Counter -->
+  <h1 id="hourCounter">0</h1>
+  <p>Hours</p>
+
+  <!-- Minute Counter -->
+  <h1 id="minuteCounter">0</h1>
+  <p>Minutes</p>
+
+  <div class="minute-buttons">
+    <button onclick="addMinutes(15)">+15 min</button>
+    <button onclick="addMinutes(30)">+30 min</button>
+    <button onclick="addMinutes(45)">+45 min</button>
+  </div>
+
+  <button id="reset">Reset</button>
+
+  <script>
+    let hours = parseInt(localStorage.getItem('hours')) || 0;
+    let minutes = parseInt(localStorage.getItem('minutes')) || 0;
+
+    const hourEl = document.getElementById('hourCounter');
+    const minEl = document.getElementById('minuteCounter');
+    const resetButton = document.getElementById('reset');
+
+    function updateDisplay() {
+      hourEl.innerText = hours;
+      minEl.innerText = minutes;
+    }
+
+    function incrementHour() {
+      hours++;
+      save();
+    }
+
+    function addMinutes(amount) {
+      minutes += amount;
+      while (minutes >= 60) {
+        minutes -= 60;
+        hours++;
+      }
+      save();
+    }
+
+    function reset() {
+      hours = 0;
+      minutes = 0;
+      save();
+    }
+
+    function save() {
+      localStorage.setItem('hours', hours);
+      localStorage.setItem('minutes', minutes);
+      updateDisplay();
+    }
+
+    hourEl.addEventListener('click', incrementHour);
+    resetButton.addEventListener('click', reset);
+
+    updateDisplay();
+  </script>
+</body>
+</html>
+
