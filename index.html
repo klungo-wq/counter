@@ -1,149 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Retro CRT Counter</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="UTF-8">
+  <title>Dual Time Counter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      user-select: none;
+      text-align: center;
+    }
 
-<style>
-/* ----- Body & Layout ----- */
-body {
-  background-color: #000;
-  color: #fff;
-  font-family: 'TempleOS', monospace;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  margin: 0;
-  padding: 2vh;
-  user-select: none;
-  text-align: center;
-}
+    /* Responsive counter font */
+    h1 {
+      font-size: 20vw; /* scales with viewport width */
+      margin: 5px 0;
+      cursor: pointer;
+      transition: transform 0.1s ease, color 0.3s ease;
+    }
 
-/* ----- CRT Background Distortion ----- */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    rgba(255,255,255,0.03) 0px,
-    rgba(255,255,255,0.03) 1px,
-    transparent 1px,
-    transparent 2px
-  );
-  z-index: 10;
-  animation: scanlines 0.1s infinite linear;
-}
+    h1:active {
+      transform: scale(1.05);
+      color: #ffb347;
+    }
 
-body::after {
-  content: '';
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 11;
-  background: rgba(255,0,0,0.02);
-  mix-blend-mode: screen;
-  animation: rgbshift 0.2s infinite alternate;
-}
+    p {
+      font-size: 4vw; /* responsive */
+      margin: 0;
+      opacity: 0.7;
+    }
 
-@keyframes scanlines {
-  0% { background-position: 0 0; }
-  100% { background-position: 0 2px; }
-}
+    #reset {
+      margin-top: 4vw;
+      font-size: 4vw;
+      padding: 2vw 6vw;
+      background-color: #9e5200;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+    }
 
-@keyframes rgbshift {
-  0% { transform: translate(0,0) }
-  50% { transform: translate(1px,-1px) }
-  100% { transform: translate(0,1px) }
-}
+    #reset:hover {
+      background-color: #633402;
+    }
 
-/* ----- Counters ----- */
-h1 {
-  font-size: 25vh;
-  margin: 0.5vh 0;
-  cursor: pointer;
-  color: #ffb347;
-  text-shadow: 0 0 10px #ffb347, 0 0 20px #ff7b00, 0 0 40px #ff7b00;
-  transition: transform 0.1s ease, color 0.3s ease, text-shadow 0.3s ease;
-}
+    #reset:active {
+      transform: scale(0.95);
+    }
 
-h1:active {
-  transform: scale(1.05);
-}
+    .minute-buttons {
+      margin-top: 3vw;
+    }
 
-p {
-  font-size: 4vh;
-  margin: 0.5vh 0;
-  color: #ffb347;
-  text-shadow: 0 0 8px #ff7b00;
-  opacity: 0.9;
-}
+    .minute-buttons button {
+      background-color: #222;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 4vw;
+      padding: 2vw 4vw;
+      margin: 0 2vw;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+    }
 
-/* ----- Reset Button ----- */
-#reset {
-  margin-top: 3vh;
-  font-size: 4vh;
-  padding: 1.5vh 4vh;
-  background-color: #9e5200;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 0 10px #9e5200;
-  transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
-}
+    .minute-buttons button:hover {
+      background-color: #444;
+    }
 
-#reset:hover {
-  background-color: #b86000;
-  box-shadow: 0 0 20px #ff7b00;
-}
-
-#reset:active {
-  transform: scale(0.95);
-}
-
-/* ----- Minute Buttons ----- */
-.minute-buttons {
-  margin-top: 2vh;
-}
-
-.minute-buttons button {
-  background-color: #222;
-  color: #ffb347;
-  border: 1px solid #ff7b00;
-  border-radius: 6px;
-  font-size: 4vh;
-  padding: 1.5vh 3vh;
-  margin: 0 1vh;
-  cursor: pointer;
-  text-shadow: 0 0 5px #ff7b00;
-  box-shadow: 0 0 10px #ff7b00 inset;
-  transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
-}
-
-.minute-buttons button:hover {
-  background-color: #333;
-  box-shadow: 0 0 20px #ffb347, 0 0 40px #ff7b00;
-}
-
-.minute-buttons button:active {
-  transform: scale(0.95);
-}
-
-/* ----- Responsive tweaks for iPhone 13 Mini ----- */
-@media (max-width: 375px) {
-  h1 { font-size: 28vh; }
-  p { font-size: 5vh; }
-  #reset, .minute-buttons button { font-size: 4.5vh; padding: 2vh 4vh; }
-}
-</style>
+    .minute-buttons button:active {
+      transform: scale(0.95);
+    }
+  </style>
 </head>
-
 <body>
   <!-- Hour Counter -->
   <h1 id="hourCounter">0</h1>
@@ -153,62 +92,57 @@ p {
   <h1 id="minuteCounter">0</h1>
   <p>Minutes</p>
 
-  <!-- Minute Increment Buttons -->
   <div class="minute-buttons">
     <button onclick="addMinutes(15)">+15 min</button>
     <button onclick="addMinutes(30)">+30 min</button>
     <button onclick="addMinutes(45)">+45 min</button>
   </div>
 
-  <!-- Reset Button -->
   <button id="reset">Reset</button>
 
-<script>
-// ----- Initialize counters -----
-let hours = parseInt(localStorage.getItem('hours')) || 0;
-let minutes = parseInt(localStorage.getItem('minutes')) || 0;
+  <script>
+    let hours = parseInt(localStorage.getItem('hours')) || 0;
+    let minutes = parseInt(localStorage.getItem('minutes')) || 0;
 
-const hourEl = document.getElementById('hourCounter');
-const minEl = document.getElementById('minuteCounter');
-const resetButton = document.getElementById('reset');
+    const hourEl = document.getElementById('hourCounter');
+    const minEl = document.getElementById('minuteCounter');
+    const resetButton = document.getElementById('reset');
 
-function updateDisplay() {
-  hourEl.innerText = hours;
-  minEl.innerText = minutes;
-}
+    function updateDisplay() {
+      hourEl.innerText = hours;
+      minEl.innerText = minutes;
+    }
 
-function incrementHour() {
-  hours++;
-  save();
-}
+    function incrementHour() {
+      hours++;
+      save();
+    }
 
-function addMinutes(amount) {
-  minutes += amount;
-  while (minutes >= 60) {
-    minutes -= 60;
-    hours++;
-  }
-  save();
-}
+    function addMinutes(amount) {
+      minutes += amount;
+      while (minutes >= 60) {
+        minutes -= 60;
+        hours++;
+      }
+      save();
+    }
 
-function reset() {
-  hours = 0;
-  minutes = 0;
-  save();
-}
+    function reset() {
+      hours = 0;
+      minutes = 0;
+      save();
+    }
 
-function save() {
-  localStorage.setItem('hours', hours);
-  localStorage.setItem('minutes', minutes);
-  updateDisplay();
-}
+    function save() {
+      localStorage.setItem('hours', hours);
+      localStorage.setItem('minutes', minutes);
+      updateDisplay();
+    }
 
-// ----- Event listeners -----
-hourEl.addEventListener('click', incrementHour);
-resetButton.addEventListener('click', reset);
+    hourEl.addEventListener('click', incrementHour);
+    resetButton.addEventListener('click', reset);
 
-updateDisplay();
-</script>
-
+    updateDisplay();
+  </script>
 </body>
 </html>
